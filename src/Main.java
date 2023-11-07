@@ -1,17 +1,57 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        // Create a JFileChooser dialog
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+        fileChooser.setFileFilter(filter);
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        int returnValue = fileChooser.showOpenDialog(null);
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            // The user selected a file
+            File selectedFile = fileChooser.getSelectedFile();
+
+            // Process the selected file and print the summary report
+            processFile(selectedFile);
+        } else {
+            System.out.println("No file selected.");
+        }
+    }
+
+    public static void processFile(File file) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            int lineCount = 0;
+            int wordCount = 0;
+            int charCount = 0;
+
+            while ((line = reader.readLine()) != null) {
+                // Count lines
+                lineCount++;
+
+                // Count words
+                String[] words = line.split("\\s+");
+                wordCount += words.length;
+
+                // Count characters
+                charCount += line.length();
+            }
+
+            // Print the summary report
+            System.out.println("File Name: " + file.getName());
+            System.out.println("Number of Lines: " + lineCount);
+            System.out.println("Number of Words: " + wordCount);
+            System.out.println("Number of Characters: " + charCount);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
